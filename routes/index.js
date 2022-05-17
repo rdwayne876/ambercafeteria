@@ -3,5 +3,6 @@ const conn = require('../db')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-    res.render()
+    res.render('home')
 })
+module.exports = router;
