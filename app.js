@@ -20,7 +20,9 @@ app.set('layout', 'layouts/layout')
 
 
 const indexRoute = require('./routes/index')
+const orderRoute = require('./routes/order')
 app.use('/', indexRoute)
+app.use('/orders', orderRoute)
 
 
 app.listen(process.env.APP_PORT)
