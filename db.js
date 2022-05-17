@@ -1,5 +1,5 @@
-const mysql = require('mysql')
-require('dotenv').config()
+// const mysql = require('mysql')
+// require('dotenv').config()
 
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -9,5 +9,5 @@ const connection = mysql.createConnection({
     database: process.env.DB_NAME,
 })
 
-connection.connect()
-module.exports = connection
+// connection.connect()
+// module.exports = connection
