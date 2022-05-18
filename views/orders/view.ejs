@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Order Table</title>
-</head>
+    <link rel="stylesheet" href="/styles/orders.css" />
+  </head>
 
-<body>
-    <div class="orderPage">
+  <body>
+    <div class="orderpage">
+      <div class="text">
         <h1>See Your Lunch Orders</h1>
-        <p>Please Select a Date</p>
-        <input type="date" placeholder="select a date">
+        <p>Please Select a Date To view your order</p>
+        <form action="/orders/lunchorders" method="post">
+          <input type="date" placeholder="select a date" name="date" />
+          <div class="btn">
+            <input type="submit" value="View Orders" />
+          </div>
+        </form>
+      </div>
+
+      <div class="orderTable">
+        <!-- <table>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Starch</th>
+            <th>Meat</th>
+            <th>Side</th>
+            <th>Juice</th>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table> -->
+      </div>
     </div>
-
-    <div class="orderTable">
-        <table>
-            <tr>
-
-            </tr>
-        </table>
-    </div>
-
-</body>
-
+  </body>
 </html>

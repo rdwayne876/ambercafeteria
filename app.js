@@ -15,7 +15,8 @@ app.set("views", path.join(__dirname, "views"));
 app.set("layout", "layouts/layout");
 
 const indexRoute = require("./routes/index");
+const orderRoute = require("./routes/order");
 app.use("/", indexRoute);
-
-app.listen(process.env.APP_PORT, "10.44.16.13");
+app.use("/orders", orderRoute);
+app.listen(process.env.APP_PORT, "10.44.16.96");
 console.log("Server is listening");
