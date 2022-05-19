@@ -5,27 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="/styles/orders.css" />
   </head>
   <body>
-    <table border="1">
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Starch</th>
-        <th>Meat</th>
-        <th>Side</th>
-        <th>Juice</th>
-      </tr>
-      <tr>
+    <div class="list">
+      <h1 style="text-align: center">Lunch list</h1>
+      <table class="table">
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Starch</th>
+          <th>Meat</th>
+          <th>Side</th>
+          <th>Juice</th>
+          <th>Action</th>
+        </tr>
         <% data.forEach((order)=>{ %>
-        <td><%= order.First_Name%></td>
-        <td><%= order.Last_Name%></td>
-        <td><%= order.Starch%></td>
-        <td><%= order.Meat%></td>
-        <td><%= order.Side%></td>
-        <td><%= order.Juice%></td>
+        <tr>
+          <td><%= order.First_Name%></td>
+          <td><%= order.Last_Name%></td>
+          <td><%= order.Starch%></td>
+          <td><%= order.Meat%></td>
+          <td><%= order.Side%></td>
+          <td><%= order.Juice%></td>
+          <td><a href="/orders/editLunch/<%= order.ID %>">Edit</a></td>
+        </tr>
         <% }); %>
-      </tr>
-    </table>
+      </table>
+    </div>
   </body>
 </html>

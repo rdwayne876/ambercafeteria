@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/projectForm.css" />
+  </head>
+
+  <body>
+    <form action="/orders/add" method="post" class="order-form">
+      <h2 class="order-head">Add Project</h2>
+      <p class="order-text"></p>
+      <!-- 
+        <label for="">Project id</label> -->
+      <!-- <input type="hidden" value="1" name="project_id"> -->
+
+      <label for="">First Name</label>
+      <input type="text" name="first_nm" />
+
+      <label for="">Last Name</label>
+      <input type="text" name="last_nm" />
+
+      <label for="">Starch</label>
+      <input type="text" name="starch" />
+
+      <label for="">Meat</label>
+      <input type="text" name="meat" />
+
+      <label for="">Side</label>
+      <input type="text" name="side" />
+
+      <label for="">juice</label>
+      <input type="text" name="juice" />
+
+      <label for="">Date</label>
+      <input type="date" name="date" />
+
+      <button class="post-btn" type="submit">Post Project</button>
+    </form>
+  </body>
+</html>

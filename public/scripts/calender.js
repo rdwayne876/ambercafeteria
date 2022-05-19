@@ -1,214 +1,226 @@
-var month = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-];
-var weekday = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-];
-var weekdayShort = [
-    "sun",
-    "mon",
-    "tue",
-    "wed",
-    "thu",
-    "fri",
-    "sat"
-];
-var monthDirection = 0;
+function CalendarControl() {
+  const calendar = new Date();
+  const calendarControl = {
+    localDate: new Date(),
+    prevMonthLastDate: null,
+    calWeekDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    calMonthName: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    daysInMonth: function (month, year) {
+      return new Date(year, month, 0).getDate();
+    },
+    firstDay: function () {
+      return new Date(calendar.getFullYear(), calendar.getMonth(), 1);
+    },
+    lastDay: function () {
+      return new Date(calendar.getFullYear(), calendar.getMonth() + 1, 0);
+    },
+    firstDayNumber: function () {
+      return calendarControl.firstDay().getDay() + 1;
+    },
+    lastDayNumber: function () {
+      return calendarControl.lastDay().getDay() + 1;
+    },
+    getPreviousMonthLastDate: function () {
+      let lastDate = new Date(
+        calendar.getFullYear(),
+        calendar.getMonth(),
+        0
+      ).getDate();
+      return lastDate;
+    },
+    navigateToPreviousMonth: function () {
+      calendar.setMonth(calendar.getMonth() - 1);
+      calendarControl.attachEventsOnNextPrev();
+    },
+    navigateToNextMonth: function () {
+      calendar.setMonth(calendar.getMonth() + 1);
+      calendarControl.attachEventsOnNextPrev();
+    },
+    navigateToCurrentMonth: function () {
+      let currentMonth = calendarControl.localDate.getMonth();
+      let currentYear = calendarControl.localDate.getFullYear();
+      calendar.setMonth(currentMonth);
+      calendar.setYear(currentYear);
+      calendarControl.attachEventsOnNextPrev();
+    },
+    displayYear: function () {
+      let yearLabel = document.querySelector(".calendar .calendar-year-label");
+      yearLabel.innerHTML = calendar.getFullYear();
+    },
+    displayMonth: function () {
+      let monthLabel = document.querySelector(
+        ".calendar .calendar-month-label"
+      );
+      monthLabel.innerHTML = calendarControl.calMonthName[calendar.getMonth()];
+    },
+    selectDate: function (e) {
+      console.log(
+        `${e.target.textContent} ${
+          calendarControl.calMonthName[calendar.getMonth()]
+        } ${calendar.getFullYear()}`
+      );
+    },
+    plotSelectors: function () {
+      document.querySelector(
+        ".calendar"
+      ).innerHTML += `<div class="calendar-inner"><div class="calendar-controls">
+          <div class="calendar-prev"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><path fill="#666" d="M88.2 3.8L35.8 56.23 28 64l7.8 7.78 52.4 52.4 9.78-7.76L45.58 64l52.4-52.4z"/></svg></a></div>
+          <div class="calendar-year-month">
+          <div class="calendar-month-label"></div>
+          <div>-</div>
+          <div class="calendar-year-label"></div>
+          </div>
+          <div class="calendar-next"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><path fill="#666" d="M38.8 124.2l52.4-52.42L99 64l-7.77-7.78-52.4-52.4-9.8 7.77L81.44 64 29 116.42z"/></svg></a></div>
+          </div>
+          <div class="calendar-today-date">Today: 
+            ${calendarControl.calWeekDays[calendarControl.localDate.getDay()]}, 
+            ${calendarControl.localDate.getDate()}, 
+            ${
+              calendarControl.calMonthName[calendarControl.localDate.getMonth()]
+            } 
+            ${calendarControl.localDate.getFullYear()}
+          </div>
+          <div class="calendar-body"></div></div>`;
+    },
+    plotDayNames: function () {
+      for (let i = 0; i < calendarControl.calWeekDays.length; i++) {
+        document.querySelector(
+          ".calendar .calendar-body"
+        ).innerHTML += `<div>${calendarControl.calWeekDays[i]}</div>`;
+      }
+    },
+    plotDates: function () {
+      document.querySelector(".calendar .calendar-body").innerHTML = "";
+      calendarControl.plotDayNames();
+      calendarControl.displayMonth();
+      calendarControl.displayYear();
+      let count = 1;
+      let prevDateCount = 0;
 
-function getNextMonth() {
-    monthDirection++;
-    var current;
-    var now = new Date();
-    if (now.getMonth() == 11) {
-        current = new Date(now.getFullYear() + monthDirection, 0, 1);
-    } else {
-        current = new Date(now.getFullYear(), now.getMonth() + monthDirection, 1);
-    }
-    initCalender(getMonth(current));
-}
-
-function getPrevMonth() {
-    monthDirection--;
-    var current;
-    var now = new Date();
-    if (now.getMonth() == 11) {
-        current = new Date(now.getFullYear() + monthDirection, 0, 1);
-    } else {
-        current = new Date(now.getFullYear(), now.getMonth() + monthDirection, 1);
-    }
-    initCalender(getMonth(current));
-}
-Date.prototype.isSameDateAs = function (pDate) {
-    return (
-        this.getFullYear() === pDate.getFullYear() &&
-        this.getMonth() === pDate.getMonth() &&
-        this.getDate() === pDate.getDate()
-    );
-};
-
-function getMonth(currentDay) {
-    var now = new Date();
-    var currentMonth = month[currentDay.getMonth()];
-    var monthArr = [];
-    for (i = 1 - currentDay.getDate(); i < 31; i++) {
-        var tomorrow = new Date(currentDay);
-        tomorrow.setDate(currentDay.getDate() + i);
-        if (currentMonth !== month[tomorrow.getMonth()]) {
-            break;
+      calendarControl.prevMonthLastDate =
+        calendarControl.getPreviousMonthLastDate();
+      let prevMonthDatesArray = [];
+      let calendarDays = calendarControl.daysInMonth(
+        calendar.getMonth() + 1,
+        calendar.getFullYear()
+      );
+      // dates of current month
+      for (let i = 1; i < calendarDays; i++) {
+        if (i < calendarControl.firstDayNumber()) {
+          prevDateCount += 1;
+          document.querySelector(
+            ".calendar .calendar-body"
+          ).innerHTML += `<div class="prev-dates"></div>`;
+          prevMonthDatesArray.push(calendarControl.prevMonthLastDate--);
         } else {
-            monthArr.push({
-                date: {
-                    weekday: weekday[tomorrow.getDay()],
-                    weekday_short: weekdayShort[tomorrow.getDay()],
-                    day: tomorrow.getDate(),
-                    month: month[tomorrow.getMonth()],
-                    year: tomorrow.getFullYear(),
-                    current_day: now.isSameDateAs(tomorrow) ? true : false,
-                    date_info: tomorrow
-                }
-            });
+          document.querySelector(
+            ".calendar .calendar-body"
+          ).innerHTML += `<div class="number-item" data-num=${count}><a class="dateNumber" href="#">${count++}</a></div>`;
         }
-    }
-    return monthArr;
-}
-function clearCalender() {
-    $("table tbody tr").each(function () {
-        $(this).find("td").removeClass("active selectable currentDay between hover").html("");
-    });
-    $("td").each(function () {
-        $(this).unbind('mouseenter').unbind('mouseleave');
-    });
-    $("td").each(function () {
-        $(this).unbind('click');
-    });
-    clickCounter = 0;
-}
-
-function initCalender(monthData) {
-    var row = 0;
-    var classToAdd = "";
-    var currentDay = "";
-    var today = new Date();
-
-    clearCalender();
-    $.each(monthData,
-        function (i, value) {
-            var weekday = value.date.weekday_short;
-            var day = value.date.day;
-            var column = 0;
-            var index = i + 1;
-
-            $(".sideb .header .month").html(value.date.month);
-            $(".sideb .header .year").html(value.date.year);
-            if (value.date.current_day) {
-                currentDay = "currentDay";
-                classToAdd = "selectable";
-                $(".right-wrapper .header span").html(value.date.weekday);
-                $(".right-wrapper .day").html(value.date.day);
-                $(".right-wrapper .month").html(value.date.month);
-            }
-            if (today.getTime() < value.date.date_info.getTime()) {
-                classToAdd = "selectable";
-
-            }
-            $("tr.weedays th").each(function () {
-                var row = $(this);
-                if (row.data("weekday") === weekday) {
-                    column = row.data("column");
-                    return;
-                }
-            });
-            $($($($("tr.days").get(row)).find("td").get(column)).addClass(classToAdd + " " + currentDay).html(day));
-            currentDay = "";
-            if (column == 6) {
-                row++;
-            }
-        });
-    $("td.selectable").click(function () {
-        dateClickHandler($(this));
-    });
-}
-initCalender(getMonth(new Date()));
-
-var clickCounter = 0;
-$(".fa-angle-double-right").click(function () {
-    $(".right-wrapper").toggleClass("is-active");
-    $(this).toggleClass("is-active");
-});
-
-function dateClickHandler(elem) {
-
-    var day1 = parseInt($(elem).html());
-    if (clickCounter === 0) {
-        $("td.selectable").each(function () {
-            $(this).removeClass("active between hover");
-        });
-    }
-    clickCounter++;
-    if (clickCounter === 2) {
-        $("td.selectable").each(function () {
-            $(this).unbind('mouseenter').unbind('mouseleave');
-        });
-        clickCounter = 0;
-        return;
-    }
-    $(elem).toggleClass("active");
-    $("td.selectable").hover(function () {
-
-        var day2 = parseInt($(this).html());
-        $(this).addClass("hover");
-        $("td.selectable").each(function () {
-            $(this).removeClass("between");
-
-        });
-        if (day1 > day2 + 1) {
-            $("td.selectable").each(function () {
-                var dayBetween = parseInt($(this).html());
-                if (dayBetween > day2 && dayBetween < day1) {
-                    $(this).addClass("between");
-                }
-            });
-        } else if (day1 < day2 + 1) {
-            $("td.selectable").each(function () {
-                var dayBetween = parseInt($(this).html());
-                if (dayBetween > day1 && dayBetween < day2) {
-                    $(this).addClass("between");
-                }
-            });
+      }
+      //remaining dates after month dates
+      for (let j = 0; j < prevDateCount + 1; j++) {
+        document.querySelector(
+          ".calendar .calendar-body"
+        ).innerHTML += `<div class="number-item" data-num=${count}><a class="dateNumber" href="#">${count++}</a></div>`;
+      }
+      calendarControl.highlightToday();
+      calendarControl.plotPrevMonthDates(prevMonthDatesArray);
+      calendarControl.plotNextMonthDates();
+    },
+    attachEvents: function () {
+      let prevBtn = document.querySelector(".calendar .calendar-prev a");
+      let nextBtn = document.querySelector(".calendar .calendar-next a");
+      let todayDate = document.querySelector(".calendar .calendar-today-date");
+      let dateNumber = document.querySelectorAll(".calendar .dateNumber");
+      prevBtn.addEventListener(
+        "click",
+        calendarControl.navigateToPreviousMonth
+      );
+      nextBtn.addEventListener("click", calendarControl.navigateToNextMonth);
+      todayDate.addEventListener(
+        "click",
+        calendarControl.navigateToCurrentMonth
+      );
+      for (var i = 0; i < dateNumber.length; i++) {
+        dateNumber[i].addEventListener(
+          "click",
+          calendarControl.selectDate,
+          false
+        );
+      }
+    },
+    highlightToday: function () {
+      let currentMonth = calendarControl.localDate.getMonth() + 1;
+      let changedMonth = calendar.getMonth() + 1;
+      let currentYear = calendarControl.localDate.getFullYear();
+      let changedYear = calendar.getFullYear();
+      if (
+        currentYear === changedYear &&
+        currentMonth === changedMonth &&
+        document.querySelectorAll(".number-item")
+      ) {
+        document
+          .querySelectorAll(".number-item")
+          [calendar.getDate() - 1].classList.add("calendar-today");
+      }
+    },
+    plotPrevMonthDates: function (dates) {
+      dates.reverse();
+      for (let i = 0; i < dates.length; i++) {
+        if (document.querySelectorAll(".prev-dates")) {
+          document.querySelectorAll(".prev-dates")[i].textContent = dates[i];
         }
-    }, function () {
-        $(this).removeClass("hover");
-    });
-}
-$(".fa-angle-left").click(function () {
-    getPrevMonth();
-    $(".main").addClass("is-rotated-left");
-    setTimeout(function () {
-        $(".main").removeClass("is-rotated-left");
-    }, 195);
-});
+      }
+    },
+    plotNextMonthDates: function () {
+      let childElemCount =
+        document.querySelector(".calendar-body").childElementCount;
+      //7 lines
+      if (childElemCount > 42) {
+        let diff = 49 - childElemCount;
+        calendarControl.loopThroughNextDays(diff);
+      }
 
-$(".fa-angle-right").click(function () {
-    getNextMonth();
-    $(".main").addClass("is-rotated-right");
-    setTimeout(function () {
-        $(".main").removeClass("is-rotated-right");
-    }, 195);
-});
+      //6 lines
+      if (childElemCount > 35 && childElemCount <= 42) {
+        let diff = 42 - childElemCount;
+        calendarControl.loopThroughNextDays(42 - childElemCount);
+      }
+    },
+    loopThroughNextDays: function (count) {
+      if (count > 0) {
+        for (let i = 1; i <= count; i++) {
+          document.querySelector(
+            ".calendar-body"
+          ).innerHTML += `<div class="next-dates">${i}</div>`;
+        }
+      }
+    },
+    attachEventsOnNextPrev: function () {
+      calendarControl.plotDates();
+      calendarControl.attachEvents();
+    },
+    init: function () {
+      calendarControl.plotSelectors();
+      calendarControl.plotDates();
+      calendarControl.attachEvents();
+    },
+  };
+  calendarControl.init();
+}
+
+const calendarControl = new CalendarControl();
